@@ -1,0 +1,7 @@
+base   d3chart
+author Liheng
+email  heng.li@realab.ai
+date   2017-08-20
+name   d3chart plugin
+desc   Inserts interactive data charts rendered by d3*.js.
+url    https://github.com/realab-ai/dokuwiki-plugin-d3chart
