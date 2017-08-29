@@ -18,6 +18,39 @@ function resizeGraphContainer() {
         }});
     }, 500);
 }
+
+function parseWikiLink(data){
+    data = decodeURIComponent(escape(window.atob(data)));
+    var dataBuf = data;
+    var sRootPath = getRootPath();
+    var patt1=new RegExp("\\[\\[\.*?\\]\\]|\\{\\{\.*?\\}\\}","g");
+    result=patt1.exec(data);
+    while (result!==null){
+        var patt2=new RegExp("\\[\\[(\.*?)\\|\.*\\]\\]");
+        var matches2=patt2.exec(result);
+        var patt3=new RegExp("\\{\\{\\s*\\:(\.*?)\\?\.*\\}\\}");
+        var matches3=patt3.exec(result);
+        if(matches2!==null){
+            if(matches2[1]!==null){
+                var sLink='?id=' + jQuery.trim(matches2[1]);
+                if(sLink[sLink.length-1]===':'){
+                    sLink=sLink+'start';
+                }
+                dataBuf = dataBuf.replace(result, sLink);
+            }
+        }
+        if(matches3!==null){
+            if(matches3[1]!==null){
+                var sLink=sRootPath+'/lib/exe/fetch.php?cache=&media=' + jQuery.trim(matches3[1]);
+                dataBuf = dataBuf.replace(result, sLink);
+            }
+        }
+        result=patt1.exec(data);
+    }
+    
+    return dataBuf;
+}
+
 jQuery(document).ready(function(){
     if (typeof(window.d3chart)==="undefined") {
         window.d3chart = new Map();
@@ -25,7 +58,7 @@ jQuery(document).ready(function(){
     jQuery("div[id^=__d3chart_][id$=_chart]").each(function(i, oChart) { try {
         var tag = jQuery(oChart).find("textarea[id^=__d3chart_]");
         var data = jQuery(tag).text();
-        data = decodeURIComponent(escape(window.atob(data)));
+        data = parseWikiLink(data);
         var id = jQuery(oChart).attr('id');
         
         var sType = jQuery(oChart).attr('type');
@@ -86,6 +119,12 @@ jQuery(document).ready(function(){
             var bZoomMode = jQuery(oChart).attr('zoomMode');
             if (typeof(bZoomMode)!=="undefined") window.d3chart.get(id).zoomMode(Number(bZoomMode));
 
+            var sNodeEventToOpenLink= jQuery(oChart).attr('nodeEventToOpenLink');
+            if (typeof(sNodeEventToOpenLink)!=="undefined") window.d3chart.get(id).nodeEventToOpenLink(sNodeEventToOpenLink);
+
+            var sNodeLinkTarget= jQuery(oChart).attr('nodeLinkTarget');
+            if (typeof(sNodeLinkTarget)!=="undefined") window.d3chart.get(id).nodeLinkTarget(sNodeLinkTarget);
+
             window.d3chart.get(id).start(data);
             jQuery(window).on("resize", resizeGraphContainer);
             jQuery('#dw__toc h3').on("click", resizeGraphContainer);
@@ -99,3 +138,12 @@ jQuery(document).ready(function(){
         console.warn(err.message);
     }});
 });
+
+function getRootPath(){
+    var strFullPath=window.document.location.href;
+    var strPath=window.document.location.pathname;
+    var pos=strFullPath.indexOf(strPath);
+    var prePath=strFullPath.substring(0,pos);
+    var postPath=strPath.substring(0,strPath.substr(1).indexOf('/')+1);
+    return(prePath+postPath);
+}

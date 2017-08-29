@@ -80,7 +80,7 @@ class action_plugin_d3chart extends DokuWiki_Action_Plugin {
     }
         
     private function get_d3force_config_text() {
-        return 'type="force" debug=0 minNodeRadius=13 maxNodeRadius=36 colorScheme="color20" dragMode=1 showLabels=1 labelsCircular=0 labelDistance=13 showTooltips=1 tooltipPosition="node" linkDistance=78 showLinkDirection=0 useDomParentWidth=0 height=618 showBorder=0 showLegend=1 lassoMode=0 zoomMode=0';
+        return 'type="force" debug=0 minNodeRadius=13 maxNodeRadius=36 colorScheme="color20" dragMode=1 showLabels=1 labelsCircular=0 labelDistance=13 showTooltips=1 tooltipPosition="node" linkDistance=78 showLinkDirection=0 useDomParentWidth=0 height=618 showBorder=0 showLegend=1 lassoMode=0 zoomMode=0 nodeEventToOpenLink="click" nodeLinkTarget="none"';
     }
     
     private function get_d3force_example_text() {

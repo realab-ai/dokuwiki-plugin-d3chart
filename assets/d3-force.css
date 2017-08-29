@@ -103,8 +103,9 @@
     position: absolute;
     border-radius: 5px;
     padding: 5px;
-    background-color: silver;
-    opacity: 0.9;
+    border: 1px solid silver;
+    background-color: rgba(255,255,255);
+    opacity: 0.78;
     width: 150px;
     overflow: auto;
     font-size: 12px;
